@@ -437,3 +437,36 @@ float *network_predict_gpu(network net, float *input)
     return out;
 }
 
+
+//#define CUDA_PROFILE
+float *network_predict_gpu_cuda_pointer(network net, float *input) {
+	cuda_set_device(net.gpu_index);
+	int size = get_network_input_size(net) * net.batch;
+	network_state state;
+	state.index = 0;
+	state.net = net;
+	state.input = input;
+	state.truth = 0;
+	state.train = 0;
+	state.delta = 0;
+
+#ifdef CUDA_PROFILE 
+	cudaEvent_t start, stop;
+	float elapsedTime;
+	cudaEventCreate(&start);
+	cudaEventRecord(start, 0);
+#endif 
+
+	forward_network_gpu(net, state);
+
+#ifdef CUDA_PROFILE 
+	cudaEventCreate(&stop);
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	cudaEventElapsedTime(&elapsedTime, start, stop);
+	printf("Inner forward GPU: (file:%s, line:%d) elapsed time : %f ms\n", __FILE__, __LINE__, elapsedTime);
+#endif 
+
+	float *out = get_network_output_gpu(net);
+	return out;
+}

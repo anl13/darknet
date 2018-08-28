@@ -28,3 +28,7 @@ Thumbs.db
 # CMake #
 cmake-build-debug/
 CMakeLists.txt
+models 
+test_batch 
+test_video_batch
+test_thread 

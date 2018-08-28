@@ -1,4 +1,6 @@
 #pragma once
+
+
 #ifdef YOLODLL_EXPORTS
 #if defined(_MSC_VER)
 #define YOLODLL_API __declspec(dllexport)

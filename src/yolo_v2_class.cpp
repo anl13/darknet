@@ -286,6 +286,15 @@ YOLODLL_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool
     int letterbox = 0;
     float hier_thresh = 0.5;
     detection *dets = get_network_boxes(&net, im.w, im.h, thresh, hier_thresh, 0, 1, &nboxes, letterbox);
+    // for debug 
+    // printf("before nms: %d\n",nboxes); 
+    // for(int i=0;i<nboxes;i++)
+    // {
+    //     box b = dets[i].bbox;
+    //     int const obj_id = max_index(dets[i].prob, l.classes);
+    //     float const prob = dets[i].prob[obj_id];
+    //     printf("prob %02d: %f\n", i, prob); 
+    // }
     if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
 
     std::vector<bbox_t> bbox_vec;
@@ -294,7 +303,8 @@ YOLODLL_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool
         box b = dets[i].bbox;
         int const obj_id = max_index(dets[i].prob, l.classes);
         float const prob = dets[i].prob[obj_id];
-        
+        // printf("prob %02d: %f\n", i, prob); 
+
         if (prob > thresh) 
         {
             bbox_t bbox;
